@@ -51,6 +51,22 @@ class PostsController extends AppController
         return $this->redirect(['action'=>'index']);
     }
 
+    public function search()
+    {
+        $this->request->allowMethod('ajax');
+
+        $keyword = $this->request->query('keyword');
+        $query = $this->Posts->find('all',[
+            'conditions' => array(
+                'OR'=> array(
+                    'pavarde LIKE'=>'%'.$keyword.'%',
+                    'vardas LIKE'=>'%'.$keyword.'%',
+                ),
+            ),
+        ]);
+        $this->set('posts', $this->paginate($query));
+    }
+
     public function apiemus()
     {
 

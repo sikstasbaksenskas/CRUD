@@ -16,7 +16,7 @@
 $cakeDescription = 'CRUD';
 ?>
 <!DOCTYPE html>
-<html>
+<html style="overflow-y:scroll">
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,6 +52,9 @@ $cakeDescription = 'CRUD';
         <?php echo $this->html->link('Kontaktai', ['action'=>'kontaktai'], ['class'=>'nav-link'], ['style'=>'text-decoration:none']);?>
       </li>
     </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Paieška" id="search">
+    </form>
   </div>
 </nav>
     <?= $this->Flash->render() ?>

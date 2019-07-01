@@ -1,7 +1,8 @@
 <div class="row">
-<h1>
-<?php echo $this->Html->link('Pridėti', ['action'=>'add'], ['class'=>'btn btn-outline-primary']);?>
-</h1>
+
+    <h1>
+        <?php echo $this->Html->link('Pridėti', ['action'=>'add'], ['class'=>'btn btn-outline-primary']);?>
+    </h1>
 
 <table class="table table-hover">
   <thead>
@@ -18,7 +19,7 @@
   <?php if(!empty($posts)):?>
   <?php foreach($posts as $post):?>
     <tr>
-      <td style="cursor:pointer" data-toggle="modal" data-target=<?php echo "#".$post->vardas;?>><?php echo $post->vardas;?></td>
+      <td class="getinfo" data-name="<?php echo $post->vardas;?>" data-id="<?php echo $post->id;?>" style="cursor:pointer" data-toggle="modal"><?php echo $post->vardas;?></td>
       <td><?php echo $post->pavarde;?></td>
       <td><?php echo $post->amzius;?></td>
       <td><?php echo $post->adresas;?></td>
@@ -27,30 +28,9 @@
         <?= $this->Form->postLink(
         'Ištrinti',
         ['action'=>'delete', $post->id],
-        ['class'=>'btn btn-outline-danger'],
+        ['class'=>'btn btn-outline-danger delete'],
         ['confirm'=>'Ar tikrai?'])
         ?>
-      </td>
-      <td>
-
-         <!-- Modal -->
-         <div class="modal fade" id=<?php echo $post->vardas;?> tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-           <div class="modal-dialog">
-             <div class="modal-content">
-               <div class="modal-header">
-               <p class="text-success">Papildoma Informacija apie <?php echo $post->vardas;?></p>
-               </div>
-               <div class="modal-body">
-                 <?php echo "Šio vartotojo ID yra ".$post->id;?>
-               </div>
-               <div class="modal-footer">
-                 <button type="button" class="btn btn-default" data-dismiss="modal">Uždaryti</button>
-               </div>
-             </div>
-           </div>
-         </div>
-         <?-- s -->
-
       </td>
     </tr>
 
@@ -61,4 +41,60 @@
   </tbody>
 </table>
 
+    <!-- Modal -->
+         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+           <div class="modal-dialog">
+             <div class="modal-content">
+               <div class="modal-header text-success">
+
+               </div>
+               <div class="modal-body">
+
+               </div>
+               <div class="modal-footer">
+                 <button type="button" class="btn btn-default" data-dismiss="modal">Uždaryti</button>
+               </div>
+             </div>
+           </div>
+         </div>
+    <?-- Modal ends -->
+
 </div>
+
+
+<script>
+
+    <!-- Paieska -->
+
+    $('document').ready(function(){
+         $('#search').keyup(function(){
+            var searchkey = $(this).val();
+            searchTags( searchkey );
+         });
+
+        function searchTags( keyword ){
+        var data = keyword;
+        $.ajax({
+                    method: 'get',
+                    url : "<?php echo $this->Url->build( [ 'controller' => 'Posts', 'action' => 'search' ] ); ?>",
+                    data: {keyword:data},
+                    success: function( response )
+                    {
+                       $( '.table-hover' ).html(response);
+                    }
+                });
+        };
+    });
+
+
+    <!-- Modal pildymas -->
+
+    $(document).on("click", ".getinfo", function () {
+         var info_id = $(this).data('id');
+         var info_name = $(this).data('name');
+         $(".modal-body").text("Šio vartotojo ID -> " + info_id );
+         $(".modal-header").text("Papildoma informacija apie -> " + info_name );
+         $('#myModal').modal('show');
+    });
+
+</script>
